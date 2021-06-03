@@ -1,37 +1,61 @@
-## Welcome to GitHub Pages
+## Lab 4
 
-You can use the [editor on GitHub](https://github.com/killua-boop/cit281-lab4/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+``` markdown
+Goals and Outcomes
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+  - Create initial Fastify Node.js web server
+  - Initialize as a Node.js project folder using Node Package Manager (npm)
+  - Add Fastify to project using npm, and test using Visual Studio Code (VSCode)
+  - Add git repo, exclude node_modules folder from git, make commits
+  - Fix MIME error, test, and commit
+  - Add a second route with query parameters, test, and commit
 
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Lab-04.js
 
-### Jekyll Themes
+```rouge
+  `/*
+    CIT 281 Lab 4
+    Name: Emily Deng
+*/
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/killua-boop/cit281-lab4/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+// Require the Fastify framework and instantiate it
+const fastify = require("fastify")();
+// Handle GET verb for / route using Fastify
+// Note use of "chain" dot notation syntax
+fastify.get("/", (request, reply) => {
+  reply
+    .code(200)
+    .header("Content-Type", "text/html; charset=utf-8")
+    .send("<h1>Hello from Lab 4!</h1>");
+});
 
-### Support or Contact
+// Route for /name
+fastify.get("/name", (request, reply) => {
+    //(A) Getting information from the requester
+    const {first, last} = request.query;
+    console.log(first, last);
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+    // (B) Transforming the request into useful infprmation
+    const name = first && last ? `${first} ${last}` : `Guest`;
+
+    // (C) Using the transformed data to inform our response to the client
+    reply
+      .code(200)
+      .header("Content-Type", "text/html; charset=utf-8")
+      .send(`<h1>Hello, ${name}</h1>`);
+  });
+
+// Start server and listen to requests using Fastify
+const listenIP = "localhost";
+const listenPort = 8080;
+fastify.listen(listenPort, listenIP, (err, address) => {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  }
+  console.log(`Server listening on ${address}`);
+});`
+
+```
